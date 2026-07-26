@@ -92,6 +92,27 @@ starrail_bot/
 새 직업을 추가하려면 `combat_data.py`의 `CLASSES`에 항목을 추가하고, 새 몬스터는
 `MONSTER_TYPES`에 추가하면 됩니다.
 
+## Railway 배포
+
+1. **GitHub에 이 코드 올리기** (Railway는 GitHub 저장소에서 배포)
+2. [railway.app](https://railway.app) 에서 New Project → **Deploy from GitHub repo** 선택, 이 저장소 선택
+3. 프로젝트 생성되면 **Variables** 탭에서 환경변수 추가:
+   - `DISCORD_BOT_TOKEN` = 봇 토큰
+4. **저장 데이터 유지하기 (중요)**: Railway 컨테이너는 재배포할 때마다 파일시스템이 초기화돼서,
+   Volume을 안 붙이면 `/status`에 저장된 유저 진행상황이 매번 날아가요.
+   - 서비스 → **Settings → Volumes → New Volume** 클릭
+   - Mount path를 `/data` 로 지정
+   - **Variables** 탭에 `DB_DIR` = `/data` 추가
+5. **Deploy** 클릭 → 로그에서 `로그인 완료: ...` 메시지가 뜨면 정상 작동
+6. 봇이 아직 서버에 초대 안 되어 있으면 README 위쪽 "실행 방법" 2번의 초대 URL로 초대
+
+이 저장소엔 이미 다음 파일들이 준비되어 있어요:
+- `Procfile` — Railway가 `python bot.py`로 실행하도록 지정 (웹 서버가 아닌 **워커**로 동작, 포트 바인딩 불필요)
+- `railway.json` — 빌드/시작 명령 명시 설정
+- `.gitignore` — `save_data.db`, `__pycache__` 등 제외
+
+배포 후 코드를 수정하고 싶으면 GitHub에 푸시만 하면 Railway가 자동으로 재배포합니다.
+
 ## 다음에 추가하면 좋은 것들
 
 - 전투 시스템 (스탯 기반 간단한 주사위 판정)
