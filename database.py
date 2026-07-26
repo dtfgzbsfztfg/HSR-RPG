@@ -3,9 +3,13 @@
 SQLite 파일 하나(save_data.db)에 전부 저장됩니다.
 """
 import json
+import os
 import aiosqlite
 
-DB_PATH = "save_data.db"
+# Railway에 Volume을 붙였다면 그 마운트 경로(예: /data)를 DB_DIR 환경변수로 지정하세요.
+# 지정하지 않으면 로컬 실행 시처럼 현재 폴더에 저장합니다.
+DB_DIR = os.environ.get("DB_DIR", ".")
+DB_PATH = os.path.join(DB_DIR, "save_data.db")
 
 
 async def init_db():
